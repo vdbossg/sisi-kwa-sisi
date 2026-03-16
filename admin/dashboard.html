@@ -44,7 +44,7 @@ let fundraisers = [];
 
 /* LOAD FUNDRAISERS FROM SERVER */
 
-fetch('http://localhost:3000/fundraisers.json')
+fetch('https://sisi-kwa-sisi-api.onrender.com/fundraisers.json')
 
 .then(res => res.json())
 
@@ -140,7 +140,7 @@ const confirmDelete = confirm("Delete this fundraiser?");
 
 if(!confirmDelete) return;
 
-fetch(`http://localhost:3000/delete/${id}`,{
+fetch(`https://sisi-kwa-sisi-api.onrender.com/delete/${id}`,{
 method:'DELETE'
 })
 .then(()=>location.reload())

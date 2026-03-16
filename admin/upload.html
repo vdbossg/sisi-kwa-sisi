@@ -87,7 +87,7 @@ formData.append('account', account);
       }
 
       try {
-        const res = await fetch('http://localhost:3000/upload', {
+        const res = await fetch('https://sisi-kwa-sisi-api.onrender.com/upload', {
           method: 'POST',
           body: formData
         });

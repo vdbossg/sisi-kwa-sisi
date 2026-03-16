@@ -162,11 +162,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
       const id = params.get('id');
 
       try {
-        const res = await fetch('http://localhost:3000/fundraisers.json');
+        const res = await fetch('https://sisi-kwa-sisi-api.onrender.com/fundraisers.json');
         const fundraisers = await res.json();
         const f = fundraisers.find(x => x.id === id);
         // get total raised
-const totalRes = await fetch(`http://localhost:3000/fundraiser/${id}/total`);
+const totalRes = await fetch(`https://sisi-kwa-sisi-api.onrender.com/fundraiser/${id}/total`);
 const totalData = await totalRes.json();
 
 const raised = totalData.totalRaised;
@@ -274,7 +274,7 @@ function openDonate(id){
 
 document.getElementById("donateModal").classList.add("active");
 
-fetch('http://localhost:3000/fundraisers.json')
+fetch('https://sisi-kwa-sisi-api.onrender.com/fundraisers.json')
 .then(res=>res.json())
 .then(data=>{
 
@@ -316,7 +316,7 @@ const amount = document.getElementById("donateAmount").value;
 const phone = document.getElementById("donatePhone").value;
 const name = document.getElementById("donateName").value;
 
-fetch("http://localhost:3000/donate",{
+fetch("https://sisi-kwa-sisi-api.onrender.com/donate",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"

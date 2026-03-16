@@ -234,7 +234,7 @@ for medical care, education, emergencies, and community support.
 const container = document.getElementById('fundraiserCards');
 const sliderTrack = document.getElementById('sliderTrack');
 
-fetch('http://localhost:3000/fundraisers.json')
+fetch('https://sisi-kwa-sisi-api.onrender.com/fundraisers.json')
 .then(res => res.json())
 .then(fundraisers => {
 
@@ -302,7 +302,7 @@ card.appendChild(thumbsContainer);
 
 const details = document.createElement('div');
 
-fetch(`http://localhost:3000/fundraiser/${f.id}/total`)
+fetch(`https://sisi-kwa-sisi-api.onrender.com/fundraiser/${f.id}/total`)
 .then(res => res.json())
 .then(totalData => {
 
