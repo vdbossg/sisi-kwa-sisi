@@ -160,6 +160,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
       const container = document.getElementById('fundraiserDetail');
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id');
+      const API = "https://sisi-kwa-sisi-api.onrender.com";
+
 
       try {
         const res = await fetch('https://sisi-kwa-sisi-api.onrender.com/fundraisers.json');
@@ -183,7 +185,7 @@ const progress = Math.min((raised / target) * 100, 100);
         // Main image
         const mainImg = document.createElement('img');
         mainImg.className = 'main-img';
-        mainImg.src = `images/${f.images[0]}`;
+        mainImg.src = `${API}/images/${f.images[0]}`;
         mainImg.alt = f.title;
         container.appendChild(mainImg);
 
@@ -191,7 +193,7 @@ const progress = Math.min((raised / target) * 100, 100);
         let currentSlide = 0;
         mainImg.addEventListener('click', () => {
           currentSlide = (currentSlide + 1) % f.images.length;
-          mainImg.src = `images/${f.images[currentSlide]}`;
+          mainImg.src = `${API}/images/${f.images[currentSlide]}`;
         });
 
         // Thumbnails
@@ -204,10 +206,10 @@ const progress = Math.min((raised / target) * 100, 100);
           if (index < maxThumbs) {
             const thumb = document.createElement('img');
             thumb.className = 'thumb';
-            thumb.src = `images/${imgFile}`;
+            thumb.src = `${API}/images/${imgFile}`;
             thumb.alt = f.title;
             thumb.addEventListener('click', () => {
-              mainImg.src = `images/${imgFile}`;
+              mainImg.src = `${API}/images/${imgFile}`;
               currentSlide = index;
             });
             thumbsContainer.appendChild(thumb);
@@ -215,13 +217,13 @@ const progress = Math.min((raised / target) * 100, 100);
             const extraCount = f.images.length - 1 - maxThumbs;
             const lastThumb = document.createElement('div');
             lastThumb.className = 'thumb';
-            lastThumb.style.background = `url(images/${imgFile}) center/cover no-repeat`;
+            lastThumb.style.background = `url(${API}/images/${imgFile}) center/cover no-repeat`;
             const overlay = document.createElement('div');
             overlay.className = 'thumb-overlay';
             overlay.innerText = `+${extraCount}`;
             lastThumb.appendChild(overlay);
             lastThumb.addEventListener('click', () => {
-              mainImg.src = `images/${imgFile}`;
+              mainImg.src = `${API}/images/${imgFile}`;
               currentSlide = index;
             });
             thumbsContainer.appendChild(lastThumb);
