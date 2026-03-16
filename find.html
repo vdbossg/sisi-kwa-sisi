@@ -139,7 +139,10 @@ placeholder="Search fundraisers..."
 const container = document.getElementById('fundraiserCards');
 const searchInput = document.getElementById('searchInput');
 
+const API = "https://sisi-kwa-sisi-api.onrender.com";
+
 let allFundraisers = [];
+
 
 /* LOAD FUNDRAISERS */
 
@@ -198,7 +201,7 @@ card.className = 'card';
 const mainImg = document.createElement('img');
 
 mainImg.className = 'main-img';
-mainImg.src = `images/${f.images[0]}`;
+mainImg.src = `${API}/images/${f.images[0]}`;
 mainImg.alt = f.title;
 
 card.appendChild(mainImg);
