@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Sisi Kwa Sisi</title>
+
+<link rel="stylesheet" href="../css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- Admin Sidebar -->
+<aside class="admin-sidebar">
+
+<h2 class="admin-logo">Admin Panel</h2>
+
+<nav>
+<a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+<a href="upload.html"><i class="fa-solid fa-upload"></i> Upload Fundraiser</a>
+<a href="../index.html"><i class="fa-solid fa-globe"></i> View Website</a>
+<a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</nav>
+
+</aside>
+
+<div class="admin-content">
+
+<h1>Admin Dashboard</h1>
+
+<a href="upload.html" class="btn">Upload New Fundraiser</a>
+
+<div id="fundraiserList" class="fundraiser-cards"></div>
+
+<script>
+
+const fundraiserList = document.getElementById('fundraiserList');
+
+let fundraisers = [];
+
+/* LOAD FUNDRAISERS FROM SERVER */
+
+fetch('http://localhost:3000/fundraisers.json')
+
+.then(res => res.json())
+
+.then(data => {
+
+fundraisers = data;
+
+fundraisers.forEach(f => {
+
+const card = document.createElement('div');
+card.className = 'card';
+
+/* IMAGE SLIDER PREVIEW */
+
+const slider = document.createElement('div');
+slider.className = 'card-slider';
+
+f.images.forEach((imgFile,index)=>{
+
+const img = document.createElement('img');
+
+img.src = `../images/${imgFile}`;
+
+img.style.display = index === 0 ? 'block' : 'none';
+
+slider.appendChild(img);
+
+});
+
+/* CLICK IMAGE TO CYCLE */
+
+let currentSlide = 0;
+
+slider.addEventListener('click',()=>{
+
+const imgs = slider.querySelectorAll('img');
+
+imgs[currentSlide].style.display = 'none';
+
+currentSlide = (currentSlide + 1) % imgs.length;
+
+imgs[currentSlide].style.display = 'block';
+
+});
+
+/* CARD CONTENT */
+
+card.innerHTML = `
+<h3>${f.title}</h3>
+<p><strong>Name:</strong> ${f.name}</p>
+<p><strong>Target:</strong> $${f.target}</p>
+
+<a href="../fundraiser.html?id=${f.id}" class="btn">View</a>
+
+<button class="btn edit-btn" data-id="${f.id}">
+<i class="fa-solid fa-pen"></i> Edit
+</button>
+
+<button class="btn delete-btn" data-id="${f.id}">
+<i class="fa-solid fa-trash"></i> Delete
+</button>
+`;
+
+card.prepend(slider);
+
+fundraiserList.appendChild(card);
+
+});
+
+})
+
+.catch(err => {
+
+console.error(err);
+
+fundraiserList.innerHTML = "<p>Unable to load fundraisers.</p>";
+
+});
+
+
+/* DELETE FUNDRAISER */
+
+document.addEventListener('click',function(e){
+
+if(e.target.classList.contains('delete-btn') ||
+e.target.parentElement.classList.contains('delete-btn')){
+
+const btn = e.target.closest('.delete-btn');
+
+const id = btn.dataset.id;
+
+const confirmDelete = confirm("Delete this fundraiser?");
+
+if(!confirmDelete) return;
+
+fetch(`http://localhost:3000/delete/${id}`,{
+method:'DELETE'
+})
+.then(()=>location.reload())
+.catch(err=>console.error(err));
+
+}
+
+});
+
+
+/* EDIT FUNDRAISER */
+
+document.addEventListener('click',function(e){
+
+if(e.target.classList.contains('edit-btn') ||
+e.target.parentElement.classList.contains('edit-btn')){
+
+const btn = e.target.closest('.edit-btn');
+
+const id = btn.dataset.id;
+
+window.location.href = `upload.html?edit=${id}`;
+
+}
+
+});
+
+</script>
+
+</div>
+
+</body>
+</html>

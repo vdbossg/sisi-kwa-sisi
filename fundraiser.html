@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundraiser Details - Sisi Kwa Sisi</title>
+  <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Hamburger Menu 
+  <div class="hamburger" onclick="toggleSidebar()">☰</div>-->
+  <!-- Top Navigation Bar -->
+<header class="top-nav">
+  <div class="top-nav-left">
+    <!-- Hamburger Menu -->
+    <div class="hamburger" onclick="toggleSidebar()">☰</div>
+
+    <!-- Logo -->
+    <img src="assets/logo.png" alt="Logo" class="logo">
+
+    <!-- Logo Name -->
+    <img src="assets/logoname.png" alt="SISI kwa SISI" class="logo-name">
+  </div>
+
+  <div class="top-nav-right">
+    <a href="tel:+254710516022" class="top-nav-contact">
+      📞 +254710516022
+    </a>
+    <a href="mailto:support@sisikwasisike.com" class="top-nav-contact">
+      ✉ support@sisikwasisike.com
+    </a>
+  </div>
+</header>
+
+  <!-- Sidebar -->
+ <aside id="sidebar">
+  <h2>Sisi Kwa Sisi</h2>
+
+  <nav>
+
+    <a href="index.html">
+      <i class="fa-solid fa-hand-holding-heart"></i> Fundraisers
+    </a>
+
+    <a href="find.html">
+      <i class="fa-solid fa-magnifying-glass"></i> Find a Fundraiser
+    </a>
+
+    <a href="guide.html">
+      <i class="fa-solid fa-book-open"></i> Fundraiser Guide
+    </a>
+
+    <a href="events.html">
+      <i class="fa-solid fa-calendar-days"></i> Events
+    </a>
+
+    <a href="updates.html">
+      <i class="fa-solid fa-bell"></i> Updates
+    </a>
+
+    <a href="faq.html">
+      <i class="fa-solid fa-circle-question"></i> FAQ
+    </a>
+
+    <a href="about.html">
+      <i class="fa-solid fa-users"></i> About Us
+    </a>
+
+    <a href="contact.html">
+      <i class="fa-solid fa-envelope"></i> Contact
+    </a>
+
+    <a href="fundraiser.html">
+      <i class="fa-solid fa-heart"></i> Donate
+    </a>
+
+  </nav>
+</aside>
+
+
+  <!-- Main Content -->
+  <main id="fundraiserDetail"></main>
+<!-- Footer -->
+<footer class="site-footer">
+
+  <div class="footer-container">
+
+    <!-- About -->
+    <div class="footer-section">
+      <h3>Sisi Kwa Sisi</h3>
+      <p>
+        Sisi Kwa Sisi is a community platform helping people raise funds 
+        for medical care, education, emergencies, and community support.
+      </p>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <a href="index.html">Fundraisers</a>
+      <a href="find.html">Find a Fundraiser</a>
+      <a href="guide.html">Fundraiser Guide</a>
+      <a href="events.html">Events</a>
+    </div>
+
+    <!-- Support -->
+    <div class="footer-section">
+      <h3>Support</h3>
+      <a href="faq.html">FAQ</a>
+      <a href="updates.html">Updates</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </div>
+
+    <div class="footer-section">
+<h3>Contact</h3>
+<p>📞 +254710516022</p>
+<p>✉ support@sisikwasisike.com</p>
+</div>
+
+<div class="footer-section">
+</div>
+</div>
+</div> <!-- end footer-container -->
+<div class="footer-social">
+
+<h3>Follow Us</h3>
+
+<div class="social-icons">
+
+<a href="#"><i class="fa-brands fa-facebook"></i></a>
+
+<a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+
+<a href="#"><i class="fa-brands fa-instagram"></i></a>
+
+<a href="#"><i class="fa-brands fa-telegram"></i></a>
+
+<a href="#"><i class="fa-brands fa-youtube"></i></a>
+
+<a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+
+<a href="#"><i class="fa-brands fa-tiktok"></i></a>
+
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Sisi Kwa Sisi. All rights reserved.</p>
+</div>
+
+</footer>
+
+  <script src="js/menu.js"></script>
+  <script>
+    (async () => {
+      const container = document.getElementById('fundraiserDetail');
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      try {
+        const res = await fetch('http://localhost:3000/fundraisers.json');
+        const fundraisers = await res.json();
+        const f = fundraisers.find(x => x.id === id);
+        // get total raised
+const totalRes = await fetch(`http://localhost:3000/fundraiser/${id}/total`);
+const totalData = await totalRes.json();
+
+const raised = totalData.totalRaised;
+const target = Number(f.target);
+
+const progress = Math.min((raised / target) * 100, 100);
+
+
+        if (!f) {
+          container.innerHTML = '<p>Fundraiser not found.</p>';
+          return;
+        }
+
+        // Main image
+        const mainImg = document.createElement('img');
+        mainImg.className = 'main-img';
+        mainImg.src = `images/${f.images[0]}`;
+        mainImg.alt = f.title;
+        container.appendChild(mainImg);
+
+        // Click main image to cycle images
+        let currentSlide = 0;
+        mainImg.addEventListener('click', () => {
+          currentSlide = (currentSlide + 1) % f.images.length;
+          mainImg.src = `images/${f.images[currentSlide]}`;
+        });
+
+        // Thumbnails
+        const thumbsContainer = document.createElement('div');
+        thumbsContainer.className = 'thumbnails';
+        const maxThumbs = 3;
+
+        f.images.forEach((imgFile, index) => {
+          if (index === 0) return; // skip main image
+          if (index < maxThumbs) {
+            const thumb = document.createElement('img');
+            thumb.className = 'thumb';
+            thumb.src = `images/${imgFile}`;
+            thumb.alt = f.title;
+            thumb.addEventListener('click', () => {
+              mainImg.src = `images/${imgFile}`;
+              currentSlide = index;
+            });
+            thumbsContainer.appendChild(thumb);
+          } else if (index === maxThumbs) {
+            const extraCount = f.images.length - 1 - maxThumbs;
+            const lastThumb = document.createElement('div');
+            lastThumb.className = 'thumb';
+            lastThumb.style.background = `url(images/${imgFile}) center/cover no-repeat`;
+            const overlay = document.createElement('div');
+            overlay.className = 'thumb-overlay';
+            overlay.innerText = `+${extraCount}`;
+            lastThumb.appendChild(overlay);
+            lastThumb.addEventListener('click', () => {
+              mainImg.src = `images/${imgFile}`;
+              currentSlide = index;
+            });
+            thumbsContainer.appendChild(lastThumb);
+          }
+        });
+
+        container.appendChild(thumbsContainer);
+
+        // Fundraiser details
+        const details = document.createElement('div');
+details.innerHTML = `
+  <h1>${f.title}</h1>
+  <p><strong>Name:</strong> ${f.name}</p>
+
+  <div class="fund-progress">
+
+  <div class="progress-text">
+    <strong>KES ${raised}</strong> raised of <strong>KES ${target}</strong>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" style="width:${progress}%"></div>
+  </div>
+
+  <div class="progress-meta">
+    ${Math.round(progress)}% funded • ${raised > 0 ? 1 : 0} donation
+  </div>
+
+</div>
+
+
+  <p>${f.shortDesc}</p>
+  <p>${f.fullDesc}</p>
+
+  <button class="btn" onclick="openDonate('${f.id}')">
+Donate Now
+</button>
+`;
+
+        container.appendChild(details);
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p>Unable to load fundraiser. Make sure the server is running.</p>';
+      }
+    })();
+    let currentFundraiser = null;
+
+function openDonate(id){
+
+document.getElementById("donateModal").classList.add("active");
+
+fetch('http://localhost:3000/fundraisers.json')
+.then(res=>res.json())
+.then(data=>{
+
+currentFundraiser = data.find(f=>f.id===id);
+
+document.getElementById("donatePaybill").innerText =
+currentFundraiser.LipaNaMpesa.Paybill;
+
+document.getElementById("donateAccount").innerText =
+currentFundraiser.LipaNaMpesa.Account;
+
+
+});
+
+}
+
+function closeDonate(){
+document.getElementById("donateModal").classList.remove("active");
+}
+
+function nextStep(step){
+
+document.querySelectorAll(".donate-step").forEach(s=>{
+s.style.display="none";
+});
+
+document.getElementById("step"+step).style.display="block";
+
+}
+
+function confirmDonate(){
+
+nextStep(4);
+
+const paybill = currentFundraiser.LipaNaMpesa.Paybill;
+const account = currentFundraiser.LipaNaMpesa.Account;
+
+const amount = document.getElementById("donateAmount").value;
+const phone = document.getElementById("donatePhone").value;
+const name = document.getElementById("donateName").value;
+
+fetch("http://localhost:3000/donate",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+fundraiserId: currentFundraiser.id,
+paybill: paybill,
+account: account,
+amount: amount,
+phone: phone,
+name: name
+})
+})
+.then(res=>res.json())
+.then(data=>{
+
+if(data.success){
+
+document.getElementById("step4").innerHTML = `
+<h2>Payment Request Sent</h2>
+<p>Check your phone and enter your M-Pesa PIN.</p>
+`;
+
+}else{
+
+document.getElementById("step4").innerHTML = `
+<h2>Payment Failed</h2>
+<p>Please try again.</p>
+`;
+
+}
+
+})
+.catch(err=>{
+console.error(err);
+});
+
+}
+
+
+  </script>
+<!-- DONATE MODAL -->
+<div id="donateModal" class="donate-modal">
+
+  <div class="donate-box">
+
+    <span class="close-modal" onclick="closeDonate()">×</span>
+
+    <div id="step1" class="donate-step">
+      <h2>Lipa na M-Pesa</h2>
+
+<p><strong>Paybill:</strong> <span id="donatePaybill"></span></p>
+<p><strong>Account:</strong> <span id="donateAccount"></span></p>
+
+<button class="btn" onclick="nextStep(2)">Next</button>
+
+    </div>
+
+    <div id="step2" class="donate-step">
+      <h2>Enter Donation Amount</h2>
+      <input type="number" id="donateAmount" placeholder="Amount (KES)">
+      <button class="btn" onclick="nextStep(3)">Next</button>
+    </div>
+
+    <div id="step3" class="donate-step">
+      <h2>Your Details</h2>
+      <input type="tel" id="donatePhone" placeholder="M-Pesa Phone Number">
+      <input type="text" id="donateName" placeholder="Full Name">
+      <button class="btn" onclick="confirmDonate()">Donate Now</button>
+    </div>
+
+    <div id="step4" class="donate-step">
+      <h2>Processing Donation</h2>
+      <p>
+      Enter your M-Pesa PIN when prompted on your phone.<br>
+      You will receive receipts from M-Pesa.
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

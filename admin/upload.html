@@ -1,0 +1,109 @@
+<!-- SISI_KWA_SISI\admin\upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Fundraiser - Sisi Kwa Sisi</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+<!-- Admin Sidebar -->
+<aside class="admin-sidebar">
+
+  <h2 class="admin-logo">Admin Panel</h2>
+
+  <nav>
+    <a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+    <a href="upload.html"><i class="fa-solid fa-upload"></i> Upload Fundraiser</a>
+    <a href="../index.html"><i class="fa-solid fa-globe"></i> View Website</a>
+    <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+  </nav>
+
+</aside>
+
+<div class="admin-content">
+
+  <form id="uploadForm" enctype="multipart/form-data">
+    <h2>Upload New Fundraiser</h2>
+    <label>Title</label>
+    <input type="text" id="title" required>
+    <label>Person Name</label>
+    <input type="text" id="name" required>
+    <label>Funds Target ($)</label>
+    <input type="number" id="target" required>
+    <label>Short Description</label>
+    <textarea id="shortDesc" required></textarea>
+    <label>Full Story</label>
+    <textarea id="fullDesc" required></textarea>
+    <label>M-Pesa Paybill</label>
+<input type="text" id="paybill" placeholder="123456" required>
+
+<label>M-Pesa Account</label>
+<input type="text" id="account" placeholder="Fundraiser Account" required>
+
+
+    <label>Images (multiple)</label>
+    <input type="file" id="images" multiple required>
+    <button type="submit" class="btn">Upload</button>
+  </form>
+
+  <script>
+    const uploadForm = document.getElementById('uploadForm');
+
+    uploadForm.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value;
+      const name = document.getElementById('name').value;
+      const target = document.getElementById('target').value;
+      const shortDesc = document.getElementById('shortDesc').value;
+      const fullDesc = document.getElementById('fullDesc').value;
+      const imagesInput = document.getElementById('images');
+      const paybill = document.getElementById('paybill').value;
+const account = document.getElementById('account').value;
+
+
+
+      const fundraiserId = Date.now();
+
+      // Prepare FormData for backend
+      const formData = new FormData();
+      formData.append('id', fundraiserId);
+      formData.append('title', title);
+      formData.append('name', name);
+      formData.append('target', target);
+      formData.append('shortDesc', shortDesc);
+      formData.append('fullDesc', fullDesc);
+formData.append('paybill', paybill);
+formData.append('account', account);
+
+      for (let i = 0; i < imagesInput.files.length; i++) {
+        formData.append('images', imagesInput.files[i]);
+      }
+
+      try {
+        const res = await fetch('http://localhost:3000/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+        alert(data.message);
+
+        uploadForm.reset();
+      } catch (err) {
+        console.error(err);
+        alert('Error uploading fundraiser. Make sure the server is running.');
+      }
+    });
+    </script>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!-- SISI_KWA_SISI\find.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Find a Fundraiser - Sisi Kwa Sisi</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+.search-box{
+max-width:500px;
+margin:20px auto;
+display:flex;
+gap:10px;
+}
+
+.search-box input{
+flex:1;
+padding:10px;
+font-size:16px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Top Navigation -->
+<header class="top-nav">
+
+<div class="top-nav-left">
+
+<div class="hamburger" onclick="toggleSidebar()">☰</div>
+
+<img src="assets/logo.png" class="logo">
+<img src="assets/logoname.png" class="logo-name">
+
+</div>
+
+<div class="top-nav-right">
+
+<a href="tel:+254710516022" class="top-nav-contact">
+📞 +254710516022
+</a>
+
+<a href="mailto:support@sisikwasisike.com" class="top-nav-contact">
+✉ support@sisikwasisike.com
+</a>
+
+</div>
+
+</header>
+
+
+<!-- Sidebar -->
+
+<aside id="sidebar">
+
+<h2>Sisi Kwa Sisi</h2>
+
+<nav>
+
+<a href="index.html">
+<i class="fa-solid fa-hand-holding-heart"></i> Fundraisers
+</a>
+
+<a href="find.html">
+<i class="fa-solid fa-magnifying-glass"></i> Find a Fundraiser
+</a>
+
+<a href="guide.html">
+<i class="fa-solid fa-book-open"></i> Fundraiser Guide
+</a>
+
+<a href="events.html">
+<i class="fa-solid fa-calendar-days"></i> Events
+</a>
+
+<a href="updates.html">
+<i class="fa-solid fa-bell"></i> Updates
+</a>
+
+<a href="faq.html">
+<i class="fa-solid fa-circle-question"></i> FAQ
+</a>
+
+<a href="about.html">
+<i class="fa-solid fa-users"></i> About Us
+</a>
+
+<a href="contact.html">
+<i class="fa-solid fa-envelope"></i> Contact
+</a>
+
+<a href="fundraiser.html">
+<i class="fa-solid fa-heart"></i> Donate
+</a>
+
+</nav>
+
+</aside>
+
+
+<!-- Main -->
+
+<main>
+
+<h1>Find a Fundraiser</h1>
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search fundraisers..."
+>
+
+</div>
+
+<div class="fundraiser-cards" id="fundraiserCards"></div>
+
+</main>
+
+
+<script src="js/menu.js"></script>
+
+<script>
+
+const container = document.getElementById('fundraiserCards');
+const searchInput = document.getElementById('searchInput');
+
+let allFundraisers = [];
+
+/* LOAD FUNDRAISERS */
+
+fetch('http://localhost:3000/fundraisers.json')
+.then(res => res.json())
+.then(data => {
+
+allFundraisers = data;
+
+renderFundraisers(allFundraisers);
+
+})
+.catch(err => {
+
+console.error(err);
+
+container.innerHTML =
+'<p>Unable to load fundraisers. Make sure the server is running.</p>';
+
+});
+
+
+/* SEARCH */
+
+searchInput.addEventListener("input", () => {
+
+const term = searchInput.value.toLowerCase();
+
+const filtered = allFundraisers.filter(f =>
+
+f.title.toLowerCase().includes(term) ||
+f.name.toLowerCase().includes(term) ||
+f.shortDesc.toLowerCase().includes(term)
+
+);
+
+renderFundraisers(filtered);
+
+});
+
+
+/* RENDER FUNDRAISERS */
+
+function renderFundraisers(list){
+
+container.innerHTML = "";
+
+list.forEach(f => {
+
+const card = document.createElement('div');
+card.className = 'card';
+
+
+/* IMAGE */
+
+const mainImg = document.createElement('img');
+
+mainImg.className = 'main-img';
+mainImg.src = `images/${f.images[0]}`;
+mainImg.alt = f.title;
+
+card.appendChild(mainImg);
+
+
+/* DETAILS */
+
+const details = document.createElement('div');
+
+fetch(`http://localhost:3000/fundraiser/${f.id}/total`)
+.then(res => res.json())
+.then(totalData => {
+
+const raised = totalData.totalRaised;
+const target = Number(f.target);
+
+const progress = Math.min((raised / target) * 100, 100);
+
+details.innerHTML = `
+
+<h3>${f.title}</h3>
+
+<p><strong>Name:</strong> ${f.name}</p>
+
+<div class="fund-progress">
+
+<div class="progress-text">
+<strong>KES ${raised}</strong> raised of <strong>KES ${target}</strong>
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" style="width:${progress}%"></div>
+</div>
+
+<div class="progress-meta">
+${Math.round(progress)}% funded • ${raised > 0 ? 1 : 0} donation
+</div>
+
+</div>
+
+<p>${f.shortDesc}</p>
+
+<a href="fundraiser.html?id=${f.id}" class="btn">More</a>
+
+`;
+
+});
+
+card.appendChild(details);
+
+container.appendChild(card);
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

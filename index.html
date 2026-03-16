@@ -1,0 +1,401 @@
+<!-- SISI_KWA_SISI\index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sisi Kwa Sisi - Fundraisers</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+/* ===== SLIDER ===== */
+
+.slider-container{
+overflow:hidden;
+width:100%;
+margin:20px 0 40px 0;
+}
+
+.slider-track{
+display:flex;
+gap:20px;
+animation:scrollSlider 40s linear infinite;
+}
+
+.slider-card{
+min-width:320px;
+background:white;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+padding:10px;
+}
+
+.slider-card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.slider-card h4{
+margin:10px 0 6px 0;
+}
+
+.slider-card .btn{
+margin-top:10px;
+display:inline-block;
+}
+
+@keyframes scrollSlider{
+
+0%{
+transform:translateX(0);
+}
+
+100%{
+transform:translateX(-50%);
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- Top Navigation Bar -->
+<header class="top-nav">
+
+<div class="top-nav-left">
+
+<div class="hamburger" onclick="toggleSidebar()">☰</div>
+
+<img src="assets/logo.png" alt="Logo" class="logo">
+
+<img src="assets/logoname.png" alt="SISI kwa SISI" class="logo-name">
+
+</div>
+
+<div class="top-nav-right">
+
+<a href="tel:+254710516022" class="top-nav-contact">
+📞 +254710516022
+</a>
+
+<a href="mailto:support@sisikwasisike.com" class="top-nav-contact">
+✉ support@sisikwasisike.com
+</a>
+
+</div>
+
+</header>
+
+
+<!-- Sidebar -->
+<aside id="sidebar">
+
+<h2>Sisi Kwa Sisi</h2>
+
+<nav>
+
+<a href="index.html">
+<i class="fa-solid fa-hand-holding-heart"></i> Fundraisers
+</a>
+
+<a href="find.html">
+<i class="fa-solid fa-magnifying-glass"></i> Find a Fundraiser
+</a>
+
+<a href="guide.html">
+<i class="fa-solid fa-book-open"></i> Fundraiser Guide
+</a>
+
+<a href="events.html">
+<i class="fa-solid fa-calendar-days"></i> Events
+</a>
+
+<a href="updates.html">
+<i class="fa-solid fa-bell"></i> Updates
+</a>
+
+<a href="faq.html">
+<i class="fa-solid fa-circle-question"></i> FAQ
+</a>
+
+<a href="about.html">
+<i class="fa-solid fa-users"></i> About Us
+</a>
+
+<a href="contact.html">
+<i class="fa-solid fa-envelope"></i> Contact
+</a>
+
+<a href="fundraiser.html">
+<i class="fa-solid fa-heart"></i> Donate
+</a>
+
+</nav>
+
+</aside>
+
+
+<!-- Main Content -->
+<main>
+
+<h1>Our Fundraisers</h1>
+
+<!-- MOVING FUNDRAISER SLIDER -->
+<div class="slider-container">
+<div class="slider-track" id="sliderTrack"></div>
+</div>
+
+<div class="fundraiser-cards" id="fundraiserCards"></div>
+
+</main>
+
+
+<!-- Footer -->
+<footer class="site-footer">
+
+<div class="footer-container">
+
+<div class="footer-section">
+<h3>Sisi Kwa Sisi</h3>
+<p>
+Sisi Kwa Sisi is a community platform helping people raise funds
+for medical care, education, emergencies, and community support.
+</p>
+</div>
+
+<div class="footer-section">
+<h3>Quick Links</h3>
+<a href="index.html">Fundraisers</a>
+<a href="find.html">Find a Fundraiser</a>
+<a href="guide.html">Fundraiser Guide</a>
+<a href="events.html">Events</a>
+</div>
+
+<div class="footer-section">
+<h3>Support</h3>
+<a href="faq.html">FAQ</a>
+<a href="updates.html">Updates</a>
+<a href="about.html">About Us</a>
+<a href="contact.html">Contact</a>
+</div>
+
+<div class="footer-section">
+<h3>Contact</h3>
+<p>📞 +254710516022</p>
+<p>✉ support@sisikwasisike.com</p>
+</div>
+
+<div class="footer-section">
+</div>
+</div>
+</div> <!-- end footer-container -->
+<div class="footer-social">
+
+<h3>Follow Us</h3>
+
+<div class="social-icons">
+
+<a href="#"><i class="fa-brands fa-facebook"></i></a>
+
+<a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+
+<a href="#"><i class="fa-brands fa-instagram"></i></a>
+
+<a href="#"><i class="fa-brands fa-telegram"></i></a>
+
+<a href="#"><i class="fa-brands fa-youtube"></i></a>
+
+<a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+
+<a href="#"><i class="fa-brands fa-tiktok"></i></a>
+
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Sisi Kwa Sisi. All rights reserved.</p>
+</div>
+
+</footer>
+
+
+<script src="js/menu.js"></script>
+
+<script>
+
+const container = document.getElementById('fundraiserCards');
+const sliderTrack = document.getElementById('sliderTrack');
+
+fetch('http://localhost:3000/fundraisers.json')
+.then(res => res.json())
+.then(fundraisers => {
+
+fundraisers.forEach(f => {
+
+const card = document.createElement('div');
+card.className = 'card';
+
+const mainImg = document.createElement('img');
+mainImg.className = 'main-img';
+mainImg.src = `images/${f.images[0]}`;
+mainImg.alt = f.title;
+card.appendChild(mainImg);
+
+
+const thumbsContainer = document.createElement('div');
+thumbsContainer.className = 'thumbnails';
+const maxThumbs = 3;
+
+f.images.forEach((imgFile, index) => {
+
+if (index === 0) return;
+
+if (index < maxThumbs){
+
+const thumb = document.createElement('img');
+thumb.className = 'thumb';
+thumb.src = `images/${imgFile}`;
+thumb.alt = f.title;
+
+thumb.addEventListener('click', () =>
+mainImg.src = `images/${imgFile}`
+);
+
+thumbsContainer.appendChild(thumb);
+
+}else if(index === maxThumbs){
+
+const extraCount = f.images.length - 1 - maxThumbs;
+
+const lastThumb = document.createElement('div');
+lastThumb.className = 'thumb';
+
+lastThumb.style.background =
+`url(images/${imgFile}) center/cover no-repeat`;
+
+const overlay = document.createElement('div');
+overlay.className = 'thumb-overlay';
+overlay.innerText = `+${extraCount}`;
+
+lastThumb.appendChild(overlay);
+
+lastThumb.addEventListener('click', () =>
+mainImg.src = `images/${imgFile}`
+);
+
+thumbsContainer.appendChild(lastThumb);
+
+}
+
+});
+
+card.appendChild(thumbsContainer);
+
+
+const details = document.createElement('div');
+
+fetch(`http://localhost:3000/fundraiser/${f.id}/total`)
+.then(res => res.json())
+.then(totalData => {
+
+const raised = totalData.totalRaised;
+const target = Number(f.target);
+
+const progress = Math.min((raised / target) * 100, 100);
+
+details.innerHTML = `
+<h3>${f.title}</h3>
+
+<p><strong>Name:</strong> ${f.name}</p>
+
+<div class="fund-progress">
+
+<div class="progress-text">
+<strong>KES ${raised}</strong> raised of <strong>KES ${target}</strong>
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" style="width:${progress}%"></div>
+</div>
+
+<div class="progress-meta">
+${Math.round(progress)}% funded • ${raised > 0 ? 1 : 0} donation
+</div>
+
+</div>
+
+<p>${f.shortDesc}</p>
+
+<a href="fundraiser.html?id=${f.id}" class="btn">More</a>
+`;
+
+
+
+/* ===== ADD TO MOVING SLIDER ===== */
+
+const slide = document.createElement('div');
+slide.className = 'slider-card';
+
+slide.innerHTML = `
+
+<img src="images/${f.images[0]}">
+
+<h4>${f.title}</h4>
+
+<div class="fund-progress">
+
+<div class="progress-text">
+<strong>KES ${raised}</strong> raised of <strong>KES ${target}</strong>
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" style="width:${progress}%"></div>
+</div>
+
+<div class="progress-meta">
+${Math.round(progress)}% funded • ${raised > 0 ? 1 : 0} donation
+</div>
+
+</div>
+
+<a href="fundraiser.html?id=${f.id}" class="btn">Donate</a>
+
+`;
+
+sliderTrack.appendChild(slide);
+
+});
+
+
+card.appendChild(details);
+container.appendChild(card);
+
+});
+
+
+/* duplicate slider items for infinite scroll */
+
+sliderTrack.innerHTML += sliderTrack.innerHTML;
+
+})
+.catch(err => {
+
+console.error(err);
+
+container.innerHTML =
+'<p>Unable to load fundraisers. Make sure the server is running.</p>';
+
+});
+
+</script>
+
+</body>
+</html>

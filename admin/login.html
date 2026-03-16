@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Sisi Kwa Sisi</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <form id="loginForm">
+    <h2>Admin Login</h2>
+    <label>Username</label>
+    <input type="text" id="username" required>
+    <label>Password</label>
+    <input type="password" id="password" required>
+    <button type="submit" class="btn">Login</button>
+    <p id="errorMsg" style="color:red; display:none;">Invalid credentials</p>
+  </form>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if(username === 'admin' && password === 'Sisi123!') {
+        window.location.href = 'dashboard.html';
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
