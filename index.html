@@ -233,7 +233,7 @@ for medical care, education, emergencies, and community support.
 
 const container = document.getElementById('fundraiserCards');
 const sliderTrack = document.getElementById('sliderTrack');
-
+const API = "https://sisi-kwa-sisi-api.onrender.com";
 fetch('https://sisi-kwa-sisi-api.onrender.com/fundraisers.json')
 .then(res => res.json())
 .then(fundraisers => {
@@ -245,7 +245,9 @@ card.className = 'card';
 
 const mainImg = document.createElement('img');
 mainImg.className = 'main-img';
-mainImg.src = `images/${f.images[0]}`;
+//mainImg.src = `images/${f.images[0]}`;
+mainImg.src = `${API}/images/${f.images[0]}`;
+
 mainImg.alt = f.title;
 card.appendChild(mainImg);
 
@@ -262,7 +264,9 @@ if (index < maxThumbs){
 
 const thumb = document.createElement('img');
 thumb.className = 'thumb';
-thumb.src = `images/${imgFile}`;
+//thumb.src = `images/${imgFile}`;
+thumb.src = `${API}/images/${imgFile}`;
+
 thumb.alt = f.title;
 
 thumb.addEventListener('click', () =>
