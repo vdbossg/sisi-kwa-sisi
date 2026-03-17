@@ -8,6 +8,7 @@ const cors = require('cors');
 const axios = require('axios');
 const moment = require('moment');
 const mongoose = require("mongoose");
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,12 @@ app.use(express.json());
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("✅ MongoDB Connected"))
 .catch(err => console.error(err));
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const fundraiserSchema = new mongoose.Schema({
   id: String,
@@ -109,7 +116,13 @@ app.post('/upload', upload.array('images', 10), async (req, res) => {
 
   const { id, title, name, target, shortDesc, fullDesc, paybill, account } = req.body;
 
-  const images = req.files.map(file => file.filename);
+  const images = [];
+
+for (let file of req.files) {
+  const result = await cloudinary.uploader.upload(file.path);
+  images.push(result.secure_url);
+}
+
 
   const newFundraiser = new Fundraiser({
   id,
