@@ -605,3 +605,14 @@ transform:scale(1.2);
     height: 160px;
   }
 }
+.search-box{
+  margin:20px 0;
+}
+
+.search-box input{
+  width:100%;
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  font-size:16px;
+}

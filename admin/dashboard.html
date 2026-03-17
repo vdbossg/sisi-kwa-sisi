@@ -34,6 +34,14 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <a href="upload.html" class="btn">Upload New Fundraiser</a>
 
+<div class="search-box">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Search by title..."
+  >
+</div>
+
 <div id="fundraiserList" class="fundraiser-cards-dashboard"></div>
 
 <script>
@@ -169,6 +177,80 @@ const id = btn.dataset.id;
 window.location.href = `upload.html?edit=${id}`;
 
 }
+
+});
+const searchInput = document.getElementById('searchInput');
+
+searchInput.addEventListener("input", () => {
+
+const term = searchInput.value.toLowerCase();
+
+/* CLEAR */
+fundraiserList.innerHTML = "";
+
+/* IF EMPTY → SHOW ALL */
+const listToRender = term === ""
+  ? fundraisers
+  : fundraisers.filter(f =>
+      f.title.toLowerCase().includes(term)
+    );
+
+/* RENDER */
+listToRender.forEach(f => {
+
+
+const card = document.createElement('div');
+card.className = 'card';
+
+/* IMAGE SLIDER */
+const slider = document.createElement('div');
+slider.className = 'card-slider';
+
+f.images.forEach((imgFile,index)=>{
+
+const img = document.createElement('img');
+img.src = imgFile;
+img.style.display = index === 0 ? 'block' : 'none';
+
+slider.appendChild(img);
+
+});
+
+/* CLICK SLIDER */
+let currentSlide = 0;
+
+slider.addEventListener('click',()=>{
+
+const imgs = slider.querySelectorAll('img');
+
+imgs[currentSlide].style.display = 'none';
+currentSlide = (currentSlide + 1) % imgs.length;
+imgs[currentSlide].style.display = 'block';
+
+});
+
+/* CONTENT */
+card.innerHTML = `
+<h3>${f.title}</h3>
+<p><strong>Name:</strong> ${f.name}</p>
+<p><strong>Target:</strong> $${f.target}</p>
+
+<a href="../fundraiser.html?id=${f.id}" class="btn">View</a>
+
+<button class="btn edit-btn" data-id="${f.id}">
+<i class="fa-solid fa-pen"></i> Edit
+</button>
+
+<button class="btn delete-btn" data-id="${f.id}">
+<i class="fa-solid fa-trash"></i> Delete
+</button>
+`;
+
+card.prepend(slider);
+
+fundraiserList.appendChild(card);
+
+});
 
 });
 
