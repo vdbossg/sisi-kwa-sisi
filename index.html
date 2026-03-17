@@ -452,8 +452,15 @@ function showPrev(){
   lightboxImg.src = currentImages[currentIndex];
 }
 
-document.getElementById('nextImg').onclick = showNext;
-document.getElementById('prevImg').onclick = showPrev;
+document.getElementById('nextImg').onclick = (e) => {
+  e.stopPropagation();
+  showNext();
+};
+
+document.getElementById('prevImg').onclick = (e) => {
+  e.stopPropagation();
+  showPrev();
+};
 
 /* CLICK ZONES (20%) */
 lightbox.addEventListener('click', (e) => {
