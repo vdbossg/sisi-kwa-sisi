@@ -11,6 +11,27 @@ const moment = require('moment');
 const app = express();
 app.use(cors());
 app.use(express.json());
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log("✅ MongoDB Connected"))
+.catch(err => console.error(err));
+
+const fundraiserSchema = new mongoose.Schema({
+  id: String,
+  title: String,
+  name: String,
+  images: [String],
+  target: Number,
+  shortDesc: String,
+  fullDesc: String,
+  LipaNaMpesa: {
+    Paybill: String,
+    Account: String
+  }
+});
+
+const Fundraiser = mongoose.model("Fundraiser", fundraiserSchema);
+
+
 app.get("/", (req, res) => {
   res.send("Sisi Kwa Sisi API running 🚀");
 });
