@@ -294,11 +294,30 @@ form textarea {
   height: 40px;   /* bigger logo name */
 }
 
-.top-nav-right {
+/*.top-nav-right {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+}*/
+.top-nav-right {
+  display: flex;
+  flex-direction: column;   /* stack vertically */
+  align-items: flex-end;   /* push to far right */
+  justify-content: center;
+  gap: 0.2rem;
 }
+@media (max-width: 768px) {
+  .top-nav {
+    flex-wrap: wrap;
+  }
+
+  .top-nav-right {
+    width: 100%;
+    align-items: flex-end;
+    margin-top: 0.5rem;
+  }
+}
+
 
 .top-nav-right a {
   color: #FFFFFF;
