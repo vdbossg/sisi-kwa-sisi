@@ -215,6 +215,9 @@ img.style.display = index === 0 ? 'block' : 'none';
 slider.appendChild(img);
 
 });
+if(listToRender.length === 0){
+  fundraiserList.innerHTML = "<p>No fundraiser found.</p>";
+}
 
 /* CLICK SLIDER */
 let currentSlide = 0;
