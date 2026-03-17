@@ -347,6 +347,77 @@ res.json(donations);
 
 
 });
+/* ===============================
+   DELETE FUNDRAISER
+================================ */
+app.delete('/delete/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const deleted = await Fundraiser.findOneAndDelete({ id });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Fundraiser not found" });
+    }
+
+    res.json({ message: "Fundraiser deleted successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error deleting fundraiser" });
+  }
+});
+/* ===============================
+   UPDATE FUNDRAISER
+================================ */
+app.put('/update/:id', upload.array('images', 10), async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const { title, name, target, shortDesc, fullDesc, paybill, account } = req.body;
+
+    let images = [];
+
+    if (req.files && req.files.length > 0) {
+      for (let file of req.files) {
+        const result = await cloudinary.uploader.upload(file.path);
+        images.push(result.secure_url);
+      }
+    }
+
+    const updateData = {
+      title,
+      name,
+      target,
+      shortDesc,
+      fullDesc,
+      LipaNaMpesa: {
+        Paybill: paybill,
+        Account: account
+      }
+    };
+
+    if (images.length > 0) {
+      updateData.images = images;
+    }
+
+    const updated = await Fundraiser.findOneAndUpdate(
+      { id },
+      updateData,
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Fundraiser not found" });
+    }
+
+    res.json({ message: "Fundraiser updated successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error updating fundraiser" });
+  }
+});
 
 /* ===============================
    START SERVER

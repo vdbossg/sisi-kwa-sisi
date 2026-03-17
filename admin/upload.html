@@ -53,6 +53,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
   </form>
 
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+const editId = urlParams.get('edit');
+
+if (editId) {
+  fetch('https://sisi-kwa-sisi-api.onrender.com/fundraisers.json')
+    .then(res => res.json())
+    .then(data => {
+      const f = data.find(item => item.id == editId);
+
+      if (!f) return;
+
+      document.getElementById('title').value = f.title;
+      document.getElementById('name').value = f.name;
+      document.getElementById('target').value = f.target;
+      document.getElementById('shortDesc').value = f.shortDesc;
+      document.getElementById('fullDesc').value = f.fullDesc;
+      document.getElementById('paybill').value = f.LipaNaMpesa.Paybill;
+      document.getElementById('account').value = f.LipaNaMpesa.Account;
+    });
+}
+
     const uploadForm = document.getElementById('uploadForm');
 
     uploadForm.addEventListener('submit', async e => {
@@ -69,7 +90,7 @@ const account = document.getElementById('account').value;
 
 
 
-      const fundraiserId = Date.now();
+      const fundraiserId = editId ? editId : Date.now();
 
       // Prepare FormData for backend
       const formData = new FormData();
@@ -87,10 +108,17 @@ formData.append('account', account);
       }
 
       try {
-        const res = await fetch('https://sisi-kwa-sisi-api.onrender.com/upload', {
-          method: 'POST',
-          body: formData
-        });
+        const url = editId
+  ? `https://sisi-kwa-sisi-api.onrender.com/update/${editId}`
+  : `https://sisi-kwa-sisi-api.onrender.com/upload`;
+
+const method = editId ? 'PUT' : 'POST';
+
+const res = await fetch(url, {
+  method: method,
+  body: formData
+});
+
 
         const data = await res.json();
         alert(data.message);
