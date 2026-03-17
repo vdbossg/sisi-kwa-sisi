@@ -154,6 +154,19 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+
+<span class="close-btn" id="closeLightbox">&times;</span>
+
+<span class="nav-left" id="prevImg">&#10094;</span>
+<span class="nav-right" id="nextImg">&#10095;</span>
+
+<img id="lightboxImg" src="">
+
+</div>
+
+
   <script src="js/menu.js"></script>
   <script>
     (async () => {
@@ -189,12 +202,12 @@ const progress = Math.min((raised / target) * 100, 100);
         mainImg.alt = f.title;
         container.appendChild(mainImg);
 
-        // Click main image to cycle images
-        let currentSlide = 0;
-        mainImg.addEventListener('click', () => {
-          currentSlide = (currentSlide + 1) % f.images.length;
-          mainImg.src = f.images[currentSlide];
-        });
+/* OPEN LIGHTBOX */
+mainImg.addEventListener('click', () => {
+  openLightbox(f.images, 0);
+});
+
+      
 
         // Thumbnails
         const thumbsContainer = document.createElement('div');
@@ -208,10 +221,11 @@ const progress = Math.min((raised / target) * 100, 100);
             thumb.className = 'thumb';
             thumb.src = imgFile;
             thumb.alt = f.title;
-            thumb.addEventListener('click', () => {
-              mainImg.src = imgFile;
-              currentSlide = index;
-            });
+           thumb.addEventListener('click', () => {
+  mainImg.src = imgFile;
+  openLightbox(f.images, index);
+});
+
             thumbsContainer.appendChild(thumb);
           } else if (index === maxThumbs) {
             const extraCount = f.images.length - 1 - maxThumbs;
@@ -223,9 +237,10 @@ const progress = Math.min((raised / target) * 100, 100);
             overlay.innerText = `+${extraCount}`;
             lastThumb.appendChild(overlay);
             lastThumb.addEventListener('click', () => {
-              mainImg.src = imgFile;
-              currentSlide = index;
-            });
+  mainImg.src = imgFile;
+  openLightbox(f.images, index);
+});
+
             thumbsContainer.appendChild(lastThumb);
           }
         });
@@ -357,6 +372,56 @@ console.error(err);
 });
 
 }
+/* ===== LIGHTBOX ===== */
+
+let currentImages = [];
+let currentIndex = 0;
+
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+/* OPEN */
+function openLightbox(images, index){
+  currentImages = images;
+  currentIndex = index;
+  lightboxImg.src = currentImages[currentIndex];
+  lightbox.classList.add('active');
+}
+
+/* CLOSE */
+document.getElementById('closeLightbox').onclick = () => {
+  lightbox.classList.remove('active');
+};
+
+/* NEXT */
+function showNext(){
+  currentIndex = (currentIndex + 1) % currentImages.length;
+  lightboxImg.src = currentImages[currentIndex];
+}
+
+/* PREVIOUS */
+function showPrev(){
+  currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+  lightboxImg.src = currentImages[currentIndex];
+}
+
+document.getElementById('nextImg').onclick = showNext;
+document.getElementById('prevImg').onclick = showPrev;
+
+/* CLICK ZONES */
+lightbox.addEventListener('click', (e) => {
+
+  const width = window.innerWidth;
+  const clickX = e.clientX;
+
+  if(clickX < width * 0.2){
+    showPrev();
+  }
+  else if(clickX > width * 0.8){
+    showNext();
+  }
+
+});
 
 
   </script>
