@@ -201,7 +201,7 @@ card.className = 'card';
 const mainImg = document.createElement('img');
 
 mainImg.className = 'main-img';
-mainImg.src = `${API}/images/${f.images[0]}`;
+mainImg.src = f.images[0];
 mainImg.alt = f.title;
 
 card.appendChild(mainImg);
