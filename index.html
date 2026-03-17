@@ -226,6 +226,19 @@ for medical care, education, emergencies, and community support.
 
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+
+<span class="close-btn" id="closeLightbox">&times;</span>
+
+<span class="nav-left" id="prevImg">&#10094;</span>
+<span class="nav-right" id="nextImg">&#10095;</span>
+
+<img id="lightboxImg" src="">
+
+</div>
+
+
 
 <script src="js/menu.js"></script>
 
@@ -250,6 +263,11 @@ mainImg.src = f.images[0];
 
 mainImg.alt = f.title;
 card.appendChild(mainImg);
+
+/* OPEN LIGHTBOX */
+mainImg.addEventListener('click', () => {
+  openLightbox(f.images, 0);
+});
 
 
 const thumbsContainer = document.createElement('div');
@@ -399,6 +417,56 @@ console.error(err);
 
 container.innerHTML =
 '<p>Unable to load fundraisers. Make sure the server is running.</p>';
+
+});
+/* ===== LIGHTBOX ===== */
+
+let currentImages = [];
+let currentIndex = 0;
+
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+/* OPEN */
+function openLightbox(images, index){
+  currentImages = images;
+  currentIndex = index;
+  lightboxImg.src = currentImages[currentIndex];
+  lightbox.classList.add('active');
+}
+
+/* CLOSE */
+document.getElementById('closeLightbox').onclick = () => {
+  lightbox.classList.remove('active');
+};
+
+/* NEXT */
+function showNext(){
+  currentIndex = (currentIndex + 1) % currentImages.length;
+  lightboxImg.src = currentImages[currentIndex];
+}
+
+/* PREVIOUS */
+function showPrev(){
+  currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+  lightboxImg.src = currentImages[currentIndex];
+}
+
+document.getElementById('nextImg').onclick = showNext;
+document.getElementById('prevImg').onclick = showPrev;
+
+/* CLICK ZONES (20%) */
+lightbox.addEventListener('click', (e) => {
+
+  const width = window.innerWidth;
+  const clickX = e.clientX;
+
+  if(clickX < width * 0.2){
+    showPrev();
+  }
+  else if(clickX > width * 0.8){
+    showNext();
+  }
 
 });
 
