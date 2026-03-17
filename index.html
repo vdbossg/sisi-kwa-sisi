@@ -246,7 +246,7 @@ card.className = 'card';
 const mainImg = document.createElement('img');
 mainImg.className = 'main-img';
 //mainImg.src = `images/${f.images[0]}`;
-mainImg.src = `${API}/images/${f.images[0]}`;
+mainImg.src = f.images[0];
 
 mainImg.alt = f.title;
 card.appendChild(mainImg);
@@ -265,13 +265,13 @@ if (index < maxThumbs){
 const thumb = document.createElement('img');
 thumb.className = 'thumb';
 //thumb.src = `images/${imgFile}`;
-thumb.src = `${API}/images/${imgFile}`;
+thumb.src = imgFile;
 
 thumb.alt = f.title;
 
 thumb.addEventListener('click', () =>
 //mainImg.src = `images/${imgFile}`
-mainImg.src = `${API}/images/${imgFile}`
+mainImg.src = imgFile
 
 );
 
@@ -285,7 +285,7 @@ const lastThumb = document.createElement('div');
 lastThumb.className = 'thumb';
 
 lastThumb.style.background =
-`url(${API}/images/${imgFile}) center/cover no-repeat`;
+`url(${imgFile}) center/cover no-repeat`;
 
 const overlay = document.createElement('div');
 overlay.className = 'thumb-overlay';
@@ -294,7 +294,7 @@ overlay.innerText = `+${extraCount}`;
 lastThumb.appendChild(overlay);
 
 lastThumb.addEventListener('click', () =>
-mainImg.src = `${API}/images/${imgFile}`
+mainImg.src = imgFile
 );
 
 thumbsContainer.appendChild(lastThumb);
@@ -352,7 +352,7 @@ slide.className = 'slider-card';
 
 slide.innerHTML = `
 
-<img src="${API}/images/${f.images[0]}">
+<img src="${f.images[0]}">
 
 
 <h4>${f.title}</h4>
