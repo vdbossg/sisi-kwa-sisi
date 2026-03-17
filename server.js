@@ -32,6 +32,17 @@ const fundraiserSchema = new mongoose.Schema({
 
 const Fundraiser = mongoose.model("Fundraiser", fundraiserSchema);
 
+const donationSchema = new mongoose.Schema({
+  fundraiserId: String,
+  checkoutId: String,
+  amount: Number,
+  phone: Number,
+  status: String,
+  receipt: String,
+  date: Date
+}, { versionKey: false }); // removes __v
+
+const Donation = mongoose.model("Donation", donationSchema);
 
 app.get("/", (req, res) => {
   res.send("Sisi Kwa Sisi API running 🚀");
@@ -204,18 +215,15 @@ if (formattedPhone.startsWith("+")) {
 
     const checkoutId = stkPush.data.CheckoutRequestID;
 
-let donations = JSON.parse(fs.readFileSync(donationsFile));
-
-donations.push({
+await Donation.create({
   fundraiserId,
   checkoutId,
   amount,
-  phone: formattedPhone,
+  phone: Number(formattedPhone),
   status: "pending",
   date: new Date()
 });
 
-fs.writeFileSync(donationsFile, JSON.stringify(donations, null, 2));
 
 res.json({
   success: true,
@@ -241,7 +249,7 @@ res.json({
    M-PESA CALLBACK
 ================================ */
 
-app.post("/mpesa/callback", (req, res) => {
+app.post("/mpesa/callback", async (req, res) => {
 
   const body = req.body;
 
@@ -260,22 +268,17 @@ app.post("/mpesa/callback", (req, res) => {
       const phone = metadata.find(x => x.Name === "PhoneNumber").Value;
      const checkoutId = stk.CheckoutRequestID;
 
-let donations = JSON.parse(fs.readFileSync(donationsFile));
+await Donation.findOneAndUpdate(
+  { checkoutId },
+  {
+    receipt,
+    amount,
+    phone,
+    status: "completed",
+    date: new Date()
+  }
+);
 
-const donation = donations.find(d => d.checkoutId === checkoutId);
-
-if (donation) {
-
-  donation.receipt = receipt;
-  donation.amount = amount;
-  donation.phone = phone;
-  donation.status = "completed";
-  donation.date = new Date();
-
-}
-
-
-fs.writeFileSync(donationsFile, JSON.stringify(donations, null, 2));
 
 console.log("Donation updated");
 
@@ -295,15 +298,18 @@ console.log("Donation updated");
    GET FUNDRAISER TOTAL
 ================================ */
 
-app.get("/fundraiser/:id/total", (req, res) => {
+app.get("/fundraiser/:id/total", async (req, res) => {
+
 
   const fundraiserId = req.params.id;
 
-  let donations = JSON.parse(fs.readFileSync(donationsFile));
+  const donations = await Donation.find({
+  fundraiserId,
+  status: "completed"
+});
 
-  const total = donations
-    .filter(d => d.fundraiserId === fundraiserId && d.status === "completed")
-    .reduce((sum, d) => sum + Number(d.amount), 0);
+const total = donations.reduce((sum, d) => sum + Number(d.amount), 0);
+
 
   res.json({
     fundraiserId,
@@ -315,17 +321,17 @@ app.get("/fundraiser/:id/total", (req, res) => {
    GET FUNDRAISER DONATIONS
 ================================ */
 
-app.get("/fundraiser/:id/donations", (req, res) => {
+app.get("/fundraiser/:id/donations", async (req, res) => {
 
   const fundraiserId = req.params.id;
 
-  let donations = JSON.parse(fs.readFileSync(donationsFile));
+ const donations = await Donation.find({
+  fundraiserId,
+  status: "completed"
+}).select("-_id"); // removes _id
 
-  const fundraiserDonations = donations.filter(
-    d => d.fundraiserId === fundraiserId && d.status === "completed"
-  );
+res.json(donations);
 
-  res.json(fundraiserDonations);
 
 });
 
