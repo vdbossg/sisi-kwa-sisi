@@ -206,6 +206,11 @@ mainImg.alt = f.title;
 
 card.appendChild(mainImg);
 
+/* OPEN LIGHTBOX */
+mainImg.addEventListener('click', () => {
+  openLightbox(f.images, 0);
+});
+
 
 /* DETAILS */
 
@@ -257,8 +262,80 @@ container.appendChild(card);
 });
 
 }
+/* ===== LIGHTBOX ===== */
+
+let currentImages = [];
+let currentIndex = 0;
+
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+/* OPEN */
+function openLightbox(images, index){
+  currentImages = images;
+  currentIndex = index;
+  lightboxImg.src = currentImages[currentIndex];
+  lightbox.classList.add('active');
+}
+
+/* CLOSE */
+document.getElementById('closeLightbox').onclick = () => {
+  lightbox.classList.remove('active');
+};
+
+/* NEXT */
+function showNext(){
+  currentIndex = (currentIndex + 1) % currentImages.length;
+  lightboxImg.src = currentImages[currentIndex];
+}
+
+/* PREVIOUS */
+function showPrev(){
+  currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+  lightboxImg.src = currentImages[currentIndex];
+}
+
+/* FIX ARROWS BUG */
+document.getElementById('nextImg').onclick = (e) => {
+  e.stopPropagation();
+  showNext();
+};
+
+document.getElementById('prevImg').onclick = (e) => {
+  e.stopPropagation();
+  showPrev();
+};
+
+/* CLICK ZONES */
+lightbox.addEventListener('click', (e) => {
+
+  if(e.target.id !== 'lightbox') return;
+
+  const width = window.innerWidth;
+  const clickX = e.clientX;
+
+  if(clickX < width * 0.2){
+    showPrev();
+  }
+  else if(clickX > width * 0.8){
+    showNext();
+  }
+
+});
 
 </script>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+
+<span class="close-btn" id="closeLightbox">&times;</span>
+
+<span class="nav-left" id="prevImg">&#10094;</span>
+<span class="nav-right" id="nextImg">&#10095;</span>
+
+<img id="lightboxImg" src="">
+
+</div>
 
 </body>
 </html>
