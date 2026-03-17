@@ -93,29 +93,29 @@ const upload = multer({ storage });
    UPLOAD FUNDRAISER
 ================================ */
 
-app.post('/upload', upload.array('images', 10), (req, res) => {
+app.post('/upload', upload.array('images', 10), async (req, res) => {
+
 
   const { id, title, name, target, shortDesc, fullDesc, paybill, account } = req.body;
 
   const images = req.files.map(file => file.filename);
 
-  let fundraisers = JSON.parse(fs.readFileSync(fundraiserFile));
+  const newFundraiser = new Fundraiser({
+  id,
+  title,
+  name,
+  target,
+  shortDesc,
+  fullDesc,
+  LipaNaMpesa: {
+    Paybill: paybill,
+    Account: account
+  },
+  images
+});
 
-  fundraisers.push({
-    id,
-    title,
-    name,
-    target,
-    shortDesc,
-    fullDesc,
-    LipaNaMpesa: {
-      Paybill: paybill,
-      Account: account
-    },
-    images
-  });
+await newFundraiser.save();
 
-  fs.writeFileSync(fundraiserFile, JSON.stringify(fundraisers, null, 2));
 
   res.json({ message: "Fundraiser uploaded successfully" });
 
@@ -125,10 +125,11 @@ app.post('/upload', upload.array('images', 10), (req, res) => {
    GET ALL FUNDRAISERS
 ================================ */
 
-app.get('/fundraisers.json', (req, res) => {
+app.get('/fundraisers.json', async (req, res) => {
 
-  const fundraisers = JSON.parse(fs.readFileSync(fundraiserFile));
-  res.json(fundraisers);
+  const fundraisers = await Fundraiser.find();
+res.json(fundraisers);
+
 
 });
 
